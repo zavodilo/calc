@@ -1,62 +1,65 @@
 <?php
-$title = 'Мой сайт';
-$h1 = 'Привет, мир!';
-$p1 = 'Это параграф.';
-$p2 = 'Это другой параграф.';
-$href = 'http://codepen.io/anon/pen/xwjLbZ';
-$src = 'http://i.imgur.com/XWG0O.gif';
-$names = ['Сергей', 'Андрей', 'Арсен', 'Яша', 'Саша', 'Sergey'];
-$cells = ['cell 1', 'cell 1'];
+// Обработчик присланных данных
+if ($_GET['action'] && is_numeric($_GET['x']) && is_numeric($_GET['y'])) {
+    //Для удобства переписываем значения полей присланной формы в простые переменные.
+    $action = $_GET['action'];
+    $x = $_GET['x'];
+    $y = $_GET['y'];
+    $result = 0; //Это переменная для результата действия
+    switch ($action) {
+        case "+":
+            $result = $x + $y;
+            break;
+        case "-":
+            $result = $x - $y;
+            break;
+        case "*":
+            $result = $x * $y;
+            break;
+        case "/":
+            if ($y != 0) {
+                $result = $x / $y;
+            } else {
+                $result = "деление на ноль";
+            };
+            break;
+        case "^":
+            $result = 1;
+            for ($i = 0; $i < $y; $i++) {
+                $result *= $x;
+            };
+            break;
+        default:
+            $result = "Неизвестное действие";
+    }
+}
 ?>
-<!doctype html>
-    <html>
-        <head>
-            <title><?=$title?></title>
-        </head>
-        <body>
-            <h1><?=$h1?></h1>
-            <a href = "<?=$href?>">
-                Переходите сюда, чтоб посмотреть как это выглядит.
-            </a>
-            <p><?=$p1?></p>
-            <p><?=$p2?></p>
-            <ul>
-                <?php 
-                foreach($names as $name) {
-                    echo "<li>{$name}</li>";
-                }
-                ?>
-                <li>Это элемент не нумерованного списка (маркированный список)</li>
-                <li>Это другой элемент</li>
-                <li>Это последний элемент в списке</li>
-            </ul>
-            <!-- Для вставки картинки -->
-<img src="<?=$src?>"/> <!-- Источник изображения указывается с помощью атрибута src="" -->
-<!-- Источником может быть URL или даже путь к файлу на вашем компьютере. -->
 
-<hr>
-<!-- Кроме того, можно создать таблицу. -->
-
-<table border="1"> <!-- Мы открыли <table> элемент. -->
-    <tr> <!-- <tr> позволяет создать ряд. -->
-        <th>Первый заголовок</th> <!-- <th> позволяет дать название для столбца таблицы. -->
-        <th>Второй заголовок</th>
-    </tr>
-    <tr>
-        <td>Первый ряд, первая колонка</td> <!-- <td> позволяет нам создать ячейку таблицы. -->
-        <td>Первый ряд, вторая колонка</td>
-    </tr>
-    <tr>
-        <td>Второй ряв, первая колонка</td>
-        <td>Второй ряд, вторая колонка</td>
-    </tr>
-    <tr>
-                <?php 
-                foreach($cells as $cell) {
-                    ?>
-                    <td><?=$cell?></td>
-                    <?php } ?>
-    </tr>
-</table>
-        </body>
-    </html>
+<html>
+<head>
+    <title>Калькулятор</title>
+</head>
+<body>
+<?php
+//Вывод результата
+if (is_numeric($result)) {
+    echo "{$x} {$action} {$y} = {$result}";
+} elseif (is_string($result)) {
+    echo $result;
+}
+?>
+<form>
+    Введите х: <input type=text name=x><br/>
+    Введите у: <input type=text name=y><br/>
+    Выберите действие:
+    <select name=action>
+        <option value="+">х+у</option>
+        <option value="-">х-у</option>
+        <option value="*">х*у</option>
+        <option value="/">х/у</option>
+        <option value="^">х^у</option>
+    </select><br/>
+    <input type=submit value="Посчитать">
+</form>
+</body>
+</html>
